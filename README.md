@@ -195,5 +195,3 @@ QueueSense_AI/
 ---
 Built with Python, Flask, and scikit-learn.
 
----
-Built with Python, Flask, and scikit-learn.
