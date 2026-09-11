@@ -170,11 +170,17 @@ QueueSense_AI/
 
 ## 10. Screenshots
 
-_Add screenshots here after running the app locally:_
-- Landing page (hero + features)
-- User dashboard with live token tracking
-- Admin live-queue control panel
-- Analytics dashboard with Chart.js visualizations
+### Landing Page
+![Landing Page](screenshots/landing_page.png)
+
+### Real-Time AI Token Tracking
+![Live Tracking](screenshots/user_token_tracking.png)
+
+### Admin Dashboard
+![Admin Dashboard](screenshots/admin_dashboard.png)
+
+### Live Queue Control
+![Queue Control](screenshots/queue_control.png)
 
 ## 11. Future Scope
 
@@ -186,10 +192,8 @@ _Add screenshots here after running the app locally:_
 - Mobile app (Flutter/React Native) consuming the same Flask backend as a REST API
 - Replace the RandomForest baseline with a gradient-boosted model (XGBoost/LightGBM) and online learning as more real data accumulates
 
-## 12. Resume Description
-
-> **QueueSense-AI — AI-Powered Online Token & Smart Queue Management System**
-> Designed and built a full-stack Flask web application that replaces physical queues with an AI-predicted virtual queue. Engineered a synthetic-data generation pipeline and trained a RandomForestRegressor (scikit-learn) achieving ~96% R² accuracy in predicting real-time waiting times from queue length, time-of-day, and counter-availability features. Implemented a complete MVC architecture with Flask Blueprints, secure authentication, QR-code token issuance, an admin control panel for live queue management (priority tokens, pause/resume, dynamic daily limits), 8 Chart.js analytics dashboards, and automated PDF report generation with ReportLab.
+---
+Built with Python, Flask, and scikit-learn.
 
 ---
 Built with Python, Flask, and scikit-learn.
