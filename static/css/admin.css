@@ -1,0 +1,94 @@
+/* =========================================================================
+   admin.css — admin dashboard, sidebar & queue control styling
+   ========================================================================= */
+
+.qs-admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.qs-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--qs-sidebar-bg);
+  backdrop-filter: blur(16px);
+  color: #E2E8F0;
+  padding: 24px 18px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.qs-sidebar .qs-brand {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: #fff;
+  margin-bottom: 30px;
+  display: block;
+}
+.qs-sidebar .nav-link {
+  color: #CBD5E1;
+  border-radius: var(--qs-radius-sm);
+  padding: 11px 14px;
+  margin-bottom: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+.qs-sidebar .nav-link:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+.qs-sidebar .nav-link.active {
+  background: linear-gradient(90deg, var(--qs-primary), var(--qs-primary-light));
+  color: #fff;
+}
+
+.qs-admin-content {
+  flex: 1;
+  padding: 28px 32px;
+}
+
+.qs-admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.qs-queue-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-radius: var(--qs-radius-sm);
+  background: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+  border: 1px solid var(--qs-card-border);
+}
+[data-theme="dark"] .qs-queue-row { background: rgba(30,41,59,0.5); }
+
+.qs-current-serving-card {
+  background: linear-gradient(135deg, #10B981, #06B6D4);
+  color: #fff;
+  border-radius: var(--qs-radius-lg);
+  padding: 26px;
+}
+
+.qs-control-btns .btn { margin-right: 8px; margin-bottom: 8px; }
+
+.qs-suggestion-item {
+  padding: 12px 16px;
+  border-left: 4px solid var(--qs-accent);
+  background: rgba(6,182,212,0.08);
+  border-radius: 0 var(--qs-radius-sm) var(--qs-radius-sm) 0;
+  margin-bottom: 10px;
+  font-size: 0.93rem;
+}
+
+@media (max-width: 900px) {
+  .qs-admin-wrapper { flex-direction: column; }
+  .qs-sidebar { width: 100%; height: auto; position: relative; }
+}

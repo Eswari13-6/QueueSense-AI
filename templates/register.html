@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Register — QueueSense-AI{% endblock %}
+{% block extra_css %}<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">{% endblock %}
+
+{% block content %}
+<div class="qs-auth-wrapper">
+  <div class="qs-auth-split glass-card">
+    <div class="qs-auth-side d-none d-md-flex" style="flex:1;">
+      <h2>Join QueueSense-AI</h2>
+      <p class="mt-2 opacity-75">Create your free account and start booking waitless tokens today.</p>
+      <ul>
+        <li><i class="bi bi-check2-circle"></i> Book tokens for any service in seconds</li>
+        <li><i class="bi bi-check2-circle"></i> Get notified when your turn is near</li>
+        <li><i class="bi bi-check2-circle"></i> Full history of past visits</li>
+      </ul>
+    </div>
+    <div class="qs-auth-form-side">
+      <h3 class="fw-bold mb-1">Create Account</h3>
+      <p class="text-muted mb-4">It only takes a minute.</p>
+
+      <form method="POST" action="{{ url_for('auth.register') }}" novalidate>
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" name="full_name" required placeholder="Jane Doe">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-control" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-control" name="phone" required placeholder="+91 98765 43210">
+        </div>
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" required placeholder="min. 6 chars">
+          </div>
+          <div class="col-6 mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" name="confirm_password" required placeholder="repeat password">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-qs-primary w-100 mt-2">Create Account</button>
+      </form>
+
+      <p class="text-center mt-4 mb-0 small">Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}QueueSense-AI — Skip the Line, Not the Service{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="qs-hero">
+  <div class="qs-blob" style="width:420px;height:420px;background:#6366F1;top:-120px;right:-100px;"></div>
+  <div class="qs-blob" style="width:320px;height:320px;background:#06B6D4;bottom:-80px;left:-60px;"></div>
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="badge rounded-pill text-bg-light border mb-3 px-3 py-2">
+          <i class="bi bi-stars text-primary"></i> AI-Powered Queue Prediction
+        </span>
+        <h1 class="mb-3">No more standing in line. <span class="highlight">Just book & relax.</span></h1>
+        <p class="lead">QueueSense-AI predicts your exact waiting time using machine learning, tracks your position live, and notifies you when your turn is near — for hospitals, banks, temples, and government offices.</p>
+        <div class="d-flex gap-3 mt-4 flex-wrap">
+          <a href="{{ url_for('auth.register') }}" class="btn btn-qs-primary btn-lg"><i class="bi bi-ticket-perforated"></i> Book a Token</a>
+          <a href="{{ url_for('auth.admin_login') }}" class="btn btn-qs-outline btn-lg"><i class="bi bi-speedometer2"></i> Admin Login</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="glass-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted small">LIVE TOKEN STATUS</span>
+            <span class="badge badge-qs-waiting rounded-pill px-3">Waiting</span>
+          </div>
+          <h2 class="fw-bold text-primary">GEN-014</h2>
+          <div class="row g-3 mt-2">
+            <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val">7</div><div class="lbl">Ahead</div></div></div>
+            <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val">18m</div><div class="lbl">Est. Wait</div></div></div>
+            <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val">Med</div><div class="lbl">Crowd</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="container py-5">
+  <h2 class="qs-section-title text-center">Everything you need for waitless service</h2>
+  <p class="qs-section-sub text-center mx-auto" style="max-width:600px;">A complete AI-driven platform for citizens and administrators alike.</p>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="glass-card qs-feature-card h-100">
+        <div class="qs-feature-icon"><i class="bi bi-cpu"></i></div>
+        <h5 class="fw-bold">AI Wait-Time Prediction</h5>
+        <p class="text-muted mb-0">A trained RandomForest model predicts your waiting time from live queue length, time of day, and counters open.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card qs-feature-card h-100">
+        <div class="qs-feature-icon"><i class="bi bi-broadcast"></i></div>
+        <h5 class="fw-bold">Live Queue Tracking</h5>
+        <p class="text-muted mb-0">Watch your position update in real time and get notified the moment your turn is near.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card qs-feature-card h-100">
+        <div class="qs-feature-icon"><i class="bi bi-qr-code"></i></div>
+        <h5 class="fw-bold">QR Token Pass</h5>
+        <p class="text-muted mb-0">Every token comes with a scannable QR code for quick, contactless verification at the counter.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card qs-feature-card h-100">
+        <div class="qs-feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
+        <h5 class="fw-bold">Admin Analytics</h5>
+        <p class="text-muted mb-0">Rich Chart.js dashboards covering visitors, utilization, and AI prediction accuracy.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card qs-feature-card h-100">
+        <div class="qs-feature-icon"><i class="bi bi-shield-check"></i></div>
+        <h5 class="fw-bold">VIP & Emergency Tokens</h5>
+        <p class="text-muted mb-0">Admins can issue priority tokens instantly for urgent or VIP cases without disrupting the queue.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card qs-feature-card h-100">
+        <div class="qs-feature-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
+        <h5 class="fw-bold">PDF Reports</h5>
+        <p class="text-muted mb-0">Generate professional daily operations and AI-accuracy reports in one click.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" class="container py-5">
+  <h2 class="qs-section-title text-center">How it works</h2>
+  <p class="qs-section-sub text-center mx-auto" style="max-width:600px;">Three simple steps between you and a waitless visit.</p>
+  <div class="row g-4 text-center">
+    <div class="col-md-4">
+      <div class="glass-card p-4 h-100">
+        <div class="qs-feature-icon mx-auto"><i class="bi bi-person-plus"></i></div>
+        <h5 class="fw-bold mt-2">1. Register & Choose Service</h5>
+        <p class="text-muted mb-0">Create an account and pick the service you need — no physical form-filling required.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card p-4 h-100">
+        <div class="qs-feature-icon mx-auto"><i class="bi bi-ticket-perforated"></i></div>
+        <h5 class="fw-bold mt-2">2. Get Your AI-Predicted Token</h5>
+        <p class="text-muted mb-0">Instantly receive a token number with an accurate, ML-predicted waiting time.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card p-4 h-100">
+        <div class="qs-feature-icon mx-auto"><i class="bi bi-bell"></i></div>
+        <h5 class="fw-bold mt-2">3. Arrive Right on Time</h5>
+        <p class="text-muted mb-0">Track your queue live from anywhere and walk in only when your turn is close.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="container py-5">
+  <div class="row align-items-center g-5">
+    <div class="col-lg-6">
+      <h2 class="qs-section-title">Why QueueSense-AI?</h2>
+      <p class="text-muted">Physical queues waste time, crowd waiting areas, and make it hard for staff to plan resources. QueueSense-AI replaces the line with a smart, predictive digital queue — giving citizens their time back and giving administrators the data they need to run services efficiently.</p>
+      <ul class="list-unstyled mt-3">
+        <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Reduces overcrowding at service counters</li>
+        <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Gives administrators real-time operational visibility</li>
+        <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Learns from data to continuously improve predictions</li>
+      </ul>
+    </div>
+    <div class="col-lg-6">
+      <div class="glass-card p-4">
+        <div class="row g-3 text-center">
+          <div class="col-6"><div class="qs-stat-card glass-card"><div class="qs-stat-value">5+</div><div class="qs-stat-label">Service Types</div></div></div>
+          <div class="col-6"><div class="qs-stat-card glass-card"><div class="qs-stat-value">AI</div><div class="qs-stat-label">Wait Prediction</div></div></div>
+          <div class="col-6"><div class="qs-stat-card glass-card"><div class="qs-stat-value">24/7</div><div class="qs-stat-label">Online Booking</div></div></div>
+          <div class="col-6"><div class="qs-stat-card glass-card"><div class="qs-stat-value">Live</div><div class="qs-stat-label">Queue Tracking</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="container py-5">
+  <div class="glass-card p-5 text-center">
+    <h2 class="qs-section-title">Ready to skip the line?</h2>
+    <p class="qs-section-sub">Join QueueSense-AI today and never stand in a physical queue again.</p>
+    <a href="{{ url_for('auth.register') }}" class="btn btn-qs-primary btn-lg"><i class="bi bi-arrow-right-circle"></i> Get Started Free</a>
+  </div>
+</section>
+
+{% endblock %}

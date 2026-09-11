@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Book a Token — QueueSense-AI{% endblock %}
+{% block extra_css %}<link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 900px;">
+  <h2 class="fw-bold mb-1">Book a Token</h2>
+  <p class="text-muted mb-4">Choose a service below. We'll instantly predict your waiting time using AI.</p>
+
+  <form method="POST" action="{{ url_for('user.book_token') }}">
+    <input type="hidden" name="service_id" id="service_id" required>
+
+    <div class="row g-3 mb-4">
+      {% for s in services %}
+      <div class="col-md-6">
+        <div class="qs-service-tile glass-card" data-service-id="{{ s.id }}">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="qs-service-icon"><i class="bi bi-building"></i></div>
+            {% if s.is_paused %}
+              <span class="badge bg-danger-subtle text-danger">Paused</span>
+            {% elif not s.is_active %}
+              <span class="badge bg-secondary-subtle text-secondary">Inactive</span>
+            {% else %}
+              <span class="badge bg-success-subtle text-success">Open</span>
+            {% endif %}
+          </div>
+          <h5 class="fw-bold mt-2 mb-1">{{ s.name }}</h5>
+          <p class="text-muted small mb-2">{{ s.description }}</p>
+          <div class="d-flex justify-content-between small text-muted">
+            <span><i class="bi bi-door-open"></i> {{ s.counters }} counters</span>
+            <span><i class="bi bi-stopwatch"></i> ~{{ s.avg_service_minutes }} min/person</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-qs-primary btn-lg w-100"><i class="bi bi-ticket-perforated"></i> Confirm & Get My Token</button>
+  </form>
+</div>
+{% endblock %}

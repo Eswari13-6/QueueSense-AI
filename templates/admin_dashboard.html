@@ -1,0 +1,205 @@
+{% extends "admin_base.html" %}
+{% block title %}Admin Dashboard — QueueSense-AI{% endblock %}
+{% block admin_extra_js %}<script src="{{ url_for('static', filename='js/queue.js') }}"></script>{% endblock %}
+
+{% block admin_page_title %}
+  {% if selected_service %}{{ selected_service.name }} — Live Queue
+  {% elif manage_mode %}Manage Services
+  {% else %}Dashboard{% endif %}
+{% endblock %}
+
+{% block admin_content %}
+
+{% if not selected_service and not manage_mode %}
+  <!-- ============================ OVERVIEW ============================ -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="qs-stat-card glass-card qs-animate-in"><div class="qs-stat-value">{{ summary.total_tokens }}</div><div class="qs-stat-label">Today's Tokens</div></div></div>
+    <div class="col-6 col-md-3"><div class="qs-stat-card glass-card qs-animate-in"><div class="qs-stat-value">{{ summary.completed_tokens }}</div><div class="qs-stat-label">Completed</div></div></div>
+    <div class="col-6 col-md-3"><div class="qs-stat-card glass-card qs-animate-in"><div class="qs-stat-value">{{ summary.cancelled_tokens }}</div><div class="qs-stat-label">Cancelled</div></div></div>
+    <div class="col-6 col-md-3"><div class="qs-stat-card glass-card qs-animate-in"><div class="qs-stat-value">{{ summary.avg_wait_minutes }}m</div><div class="qs-stat-label">Avg Wait</div></div></div>
+  </div>
+
+  <h5 class="fw-bold mb-3">Service Queues</h5>
+  <div class="row g-4">
+    {% for state in service_states %}
+    <div class="col-md-6 col-lg-4">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <h5 class="fw-bold mb-1">{{ state.service.name }}</h5>
+          {% if state.service.is_paused %}
+            <span class="badge bg-danger-subtle text-danger">Paused</span>
+          {% else %}
+            <span class="badge bg-success-subtle text-success">Live</span>
+          {% endif %}
+        </div>
+        <p class="text-muted small mb-3">{{ state.queue_length }} waiting · {{ state.daily_count }}/{{ state.service.max_daily_tokens }} today</p>
+        {% if state.current_serving %}
+        <p class="small mb-3"><i class="bi bi-arrow-right-circle-fill text-primary"></i> Now serving: <strong>{{ state.current_serving.token_number }}</strong></p>
+        {% else %}
+        <p class="small text-muted mb-3"><i class="bi bi-pause-circle"></i> No one currently being served</p>
+        {% endif %}
+        <a href="{{ url_for('admin.view_queue', service_id=state.service.id) }}" class="btn btn-qs-primary btn-sm w-100">Manage Queue</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+{% elif selected_service %}
+  <!-- ============================ LIVE QUEUE VIEW ============================ -->
+  <div data-live-queue data-refresh-seconds="25" class="mb-2">
+    <span class="badge text-bg-light border" data-refresh-countdown="25">Refreshing in 25s</span>
+  </div>
+
+  {% set state = service_states[0] %}
+  <div class="row g-4 mb-4">
+    <div class="col-md-5">
+      {% if state.current_serving %}
+      <div class="qs-current-serving-card">
+        <div class="small text-uppercase opacity-75">Now Serving</div>
+        <div class="fs-2 fw-bold">{{ state.current_serving.token_number }}</div>
+        <div class="small mt-1">{{ state.current_serving.user_name }}</div>
+        <div class="qs-control-btns mt-3">
+          <form method="POST" action="{{ url_for('admin.complete_token', token_id=state.current_serving.id) }}" style="display:inline;">
+            <input type="hidden" name="service_id" value="{{ selected_service.id }}">
+            <button class="btn btn-light btn-sm"><i class="bi bi-check2-circle"></i> Complete</button>
+          </form>
+          <form method="POST" action="{{ url_for('admin.skip_token', token_id=state.current_serving.id) }}" style="display:inline;" data-confirm="Skip this token as a no-show?">
+            <input type="hidden" name="service_id" value="{{ selected_service.id }}">
+            <button class="btn btn-outline-light btn-sm"><i class="bi bi-skip-forward"></i> Skip</button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <div class="glass-card p-4 text-center">
+        <i class="bi bi-inbox fs-1 text-muted"></i>
+        <p class="text-muted mt-2 mb-0">No one is currently being served.</p>
+      </div>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('admin.call_next', service_id=selected_service.id) }}" class="mt-3">
+        <button class="btn btn-qs-primary w-100"><i class="bi bi-megaphone"></i> Call Next Token</button>
+      </form>
+
+      <div class="glass-card p-4 mt-3">
+        <h6 class="fw-bold mb-3">Queue Controls</h6>
+        <div class="qs-control-btns">
+          {% if selected_service.is_paused %}
+          <form method="POST" action="{{ url_for('admin.resume_queue', service_id=selected_service.id) }}" style="display:inline;">
+            <button class="btn btn-qs-accent btn-sm"><i class="bi bi-play-fill"></i> Resume Queue</button>
+          </form>
+          {% else %}
+          <form method="POST" action="{{ url_for('admin.pause_queue', service_id=selected_service.id) }}" style="display:inline;">
+            <button class="btn btn-outline-warning btn-sm"><i class="bi bi-pause-fill"></i> Pause Queue</button>
+          </form>
+          {% endif %}
+        </div>
+
+        <form method="POST" action="{{ url_for('admin.set_limit', service_id=selected_service.id) }}" class="d-flex gap-2 mt-3">
+          <input type="number" name="max_tokens" class="form-control form-control-sm" placeholder="Max daily tokens" value="{{ selected_service.max_daily_tokens }}">
+          <button class="btn btn-qs-outline btn-sm">Set Limit</button>
+        </form>
+      </div>
+
+      <div class="glass-card p-4 mt-3">
+        <h6 class="fw-bold mb-3">Issue Priority Token</h6>
+        <form method="POST" action="{{ url_for('admin.issue_priority', service_id=selected_service.id) }}">
+          <select name="user_id" class="form-select form-select-sm mb-2" required>
+            <option value="">Select user...</option>
+            {% for u in users %}
+            <option value="{{ u.id }}">{{ u.full_name }}</option>
+            {% endfor %}
+          </select>
+          <select name="priority" class="form-select form-select-sm mb-2">
+            <option value="vip">VIP</option>
+            <option value="emergency">Emergency</option>
+          </select>
+          <button class="btn btn-qs-primary btn-sm w-100">Issue Token</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="glass-card p-4">
+        <h6 class="fw-bold mb-3">Live Queue ({{ live_queue|length }} waiting)</h6>
+        {% if live_queue %}
+          {% for t in live_queue %}
+          <div class="qs-queue-row">
+            <div>
+              <strong>{{ t.token_number }}</strong>
+              <span class="text-muted small ms-2">{{ t.user_name }}</span>
+              {% if t.priority != 'normal' %}
+                <span class="badge badge-qs-{{ t.priority }} ms-2">{{ t.priority|upper }}</span>
+              {% endif %}
+            </div>
+            <span class="badge rounded-pill badge-qs-{{ t.status }}">{{ t.status|upper }}</span>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-muted mb-0">No one waiting right now.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('admin.dashboard') }}" class="btn btn-qs-outline btn-sm"><i class="bi bi-arrow-left"></i> Back to all services</a>
+
+{% elif manage_mode %}
+  <!-- ============================ MANAGE SERVICES ============================ -->
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="glass-card p-4">
+        <h6 class="fw-bold mb-3">All Services</h6>
+        <div class="table-responsive">
+          <table class="table qs-table align-middle mb-0">
+            <thead><tr><th>Name</th><th>Counters</th><th>Avg Min</th><th>Daily Limit</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              {% for s in services %}
+              <tr>
+                <form method="POST" action="{{ url_for('admin.manage_services') }}" id="form-{{ s.id }}">
+                  <input type="hidden" name="action" value="update">
+                  <input type="hidden" name="service_id" value="{{ s.id }}">
+                </form>
+                <td class="fw-semibold">{{ s.name }}</td>
+                <td><input type="number" name="counters" value="{{ s.counters }}" class="form-control form-control-sm" style="width:60px;" form="form-{{ s.id }}"></td>
+                <td><input type="number" step="0.5" name="avg_service_minutes" value="{{ s.avg_service_minutes }}" class="form-control form-control-sm" style="width:70px;" form="form-{{ s.id }}"></td>
+                <td><input type="number" name="max_daily_tokens" value="{{ s.max_daily_tokens }}" class="form-control form-control-sm" style="width:80px;" form="form-{{ s.id }}"></td>
+                <td>
+                  {% if s.is_active %}<span class="badge bg-success-subtle text-success">Active</span>
+                  {% else %}<span class="badge bg-secondary-subtle text-secondary">Inactive</span>{% endif %}
+                </td>
+                <td>
+                  <button type="submit" form="form-{{ s.id }}" class="btn btn-qs-outline btn-sm">Save</button>
+                  <form method="POST" action="{{ url_for('admin.manage_services') }}" style="display:inline;">
+                    <input type="hidden" name="action" value="toggle_active">
+                    <input type="hidden" name="service_id" value="{{ s.id }}">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">Toggle</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="glass-card p-4">
+        <h6 class="fw-bold mb-3"><i class="bi bi-plus-circle"></i> Add New Service</h6>
+        <form method="POST" action="{{ url_for('admin.manage_services') }}">
+          <input type="hidden" name="action" value="create">
+          <div class="mb-2"><input type="text" name="name" class="form-control" placeholder="Service name" required></div>
+          <div class="mb-2"><textarea name="description" class="form-control" placeholder="Description" rows="2"></textarea></div>
+          <div class="row g-2 mb-2">
+            <div class="col-4"><input type="number" name="counters" class="form-control" placeholder="Counters" value="2"></div>
+            <div class="col-4"><input type="number" step="0.5" name="avg_service_minutes" class="form-control" placeholder="Avg min" value="5"></div>
+            <div class="col-4"><input type="number" name="max_daily_tokens" class="form-control" placeholder="Max/day" value="150"></div>
+          </div>
+          <button type="submit" class="btn btn-qs-primary w-100">Create Service</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

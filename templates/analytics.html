@@ -1,0 +1,92 @@
+{% extends "admin_base.html" %}
+{% block title %}Analytics — QueueSense-AI{% endblock %}
+{% block admin_page_title %}Analytics{% endblock %}
+{% block admin_page_sub %}AI-powered insights across all services{% endblock %}
+{% block admin_extra_js %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>{% endblock %}
+
+{% block admin_content %}
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="qs-stat-card glass-card"><div class="qs-stat-value">{{ model_metrics.get('accuracy_pct', '—') }}%</div><div class="qs-stat-label">Model R² Accuracy</div></div></div>
+  <div class="col-6 col-md-3"><div class="qs-stat-card glass-card"><div class="qs-stat-value">{{ model_metrics.get('mae_minutes', '—') }}</div><div class="qs-stat-label">MAE (minutes)</div></div></div>
+  <div class="col-6 col-md-3"><div class="qs-stat-card glass-card"><div class="qs-stat-value">{{ data.accuracy.overall_accuracy if data.accuracy.overall_accuracy is not none else '—' }}%</div><div class="qs-stat-label">Live Accuracy</div></div></div>
+  <div class="col-6 col-md-3"><div class="qs-stat-card glass-card"><div class="qs-stat-value">{{ model_metrics.get('training_samples', '—') }}</div><div class="qs-stat-label">Training Samples</div></div></div>
+</div>
+
+{% if suggestions %}
+<div class="glass-card p-4 mb-4">
+  <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb"></i> AI Suggestions</h6>
+  {% for s in suggestions %}
+  <div class="qs-suggestion-item">{{ s }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Hourly Visitors (Today)</h6>
+      <canvas data-chart-type="bar" data-label="Visitors"
+              data-labels='{{ data.hourly.labels|tojson }}'
+              data-values='{{ data.hourly['values']|tojson }}'></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Daily Visitors (Last 7 Days)</h6>
+      <canvas data-chart-type="line" data-label="Visitors"
+              data-labels='{{ data.daily.labels|tojson }}'
+              data-values='{{ data.daily['values']|tojson }}'></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Monthly Visitors</h6>
+      <canvas data-chart-type="bar" data-label="Visitors"
+              data-labels='{{ data.monthly.labels|tojson }}'
+              data-values='{{ data.monthly['values']|tojson }}'></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Average Waiting Time by Service (min)</h6>
+      <canvas data-chart-type="bar" data-label="Avg Wait"
+              data-labels='{{ data.avg_wait.labels|tojson }}'
+              data-values='{{ data.avg_wait['values']|tojson }}'></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Counter Utilization</h6>
+      <canvas data-chart-type="bar" data-label="Tokens / Counter"
+              data-labels='{{ data.utilization.labels|tojson }}'
+              data-values='{{ data.utilization['values']|tojson }}'></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Completed vs Cancelled</h6>
+      <canvas data-chart-type="doughnut" data-label="Tokens"
+              data-labels='{{ data.completed_cancelled.labels|tojson }}'
+              data-values='{{ data.completed_cancelled['values']|tojson }}'></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Prediction Accuracy Over Time (%)</h6>
+      <canvas data-chart-type="line" data-label="Accuracy %"
+              data-labels='{{ data.accuracy.labels|tojson }}'
+              data-values='{{ data.accuracy['values']|tojson }}'></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-3">Today's Service Breakdown</h6>
+      <canvas data-chart-type="doughnut" data-label="Tokens"
+              data-labels='{{ data.breakdown.labels|tojson }}'
+              data-values='{{ data.breakdown['values']|tojson }}'></canvas>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

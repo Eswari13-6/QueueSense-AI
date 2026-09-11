@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Our Services — QueueSense-AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="qs-section-title text-center">Available Services</h2>
+  <p class="qs-section-sub text-center mx-auto" style="max-width:600px;">Book a token for any of the services below and let our AI predict your wait.</p>
+
+  <div class="row g-4">
+    {% for s in services %}
+    <div class="col-md-6 col-lg-4">
+      <div class="glass-card qs-feature-card h-100">
+        <div class="qs-feature-icon"><i class="bi bi-building"></i></div>
+        <h5 class="fw-bold">{{ s.name }}</h5>
+        <p class="text-muted small">{{ s.description }}</p>
+        <div class="d-flex justify-content-between small text-muted mb-3">
+          <span><i class="bi bi-door-open"></i> {{ s.counters }} counters</span>
+          <span><i class="bi bi-stopwatch"></i> ~{{ s.avg_service_minutes }} min</span>
+        </div>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-qs-outline btn-sm w-100">Book This Service</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

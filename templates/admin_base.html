@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<link href="{{ url_for('static', filename='css/admin.css') }}" rel="stylesheet">
+{% block admin_extra_css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="qs-admin-wrapper">
+  <aside class="qs-sidebar">
+    <a href="{{ url_for('admin.dashboard') }}" class="qs-brand"><i class="bi bi-diagram-3-fill"></i> QueueSense-AI</a>
+    <nav class="nav flex-column">
+      <a class="nav-link" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a class="nav-link" href="{{ url_for('admin.manage_services') }}"><i class="bi bi-gear"></i> Manage Services</a>
+      <a class="nav-link" href="{{ url_for('admin.analytics_view') }}"><i class="bi bi-graph-up"></i> Analytics</a>
+      <a class="nav-link" href="{{ url_for('admin.reports_view') }}"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a>
+      <hr class="border-secondary my-3">
+      <a class="nav-link" href="{{ url_for('auth.admin_logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <div class="qs-admin-content">
+    <div class="qs-admin-topbar">
+      <div>
+        <h3 class="fw-bold mb-0">{% block admin_page_title %}Dashboard{% endblock %}</h3>
+        <p class="text-muted mb-0">{% block admin_page_sub %}Welcome back, {{ session.get('admin_name', 'Admin') }}{% endblock %}</p>
+      </div>
+      <span class="badge text-bg-light border px-3 py-2"><i class="bi bi-calendar3"></i> {{ today() if today else '' }}</span>
+    </div>
+
+    {% block admin_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% block admin_extra_js %}{% endblock %}
+{% endblock %}

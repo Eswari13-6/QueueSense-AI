@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard — QueueSense-AI{% endblock %}
+{% block extra_css %}<link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="fw-bold mb-0">Welcome, {{ session.get('user_name', 'there') }} 👋</h2>
+      <p class="text-muted mb-0">Here's what's happening with your tokens today.</p>
+    </div>
+    <a href="{{ url_for('user.book_token') }}" class="btn btn-qs-primary"><i class="bi bi-plus-circle"></i> Book New Token</a>
+  </div>
+
+  {% if active_tokens %}
+    <h5 class="fw-bold mb-3">Active Tokens</h5>
+    <div class="row g-4 mb-5">
+      {% for t in active_tokens %}
+      <div class="col-md-6">
+        <div class="glass-card p-4" data-token-id="{{ t.id }}">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="text-muted small text-uppercase">{{ t.service_name }}</div>
+              <h3 class="fw-bold text-primary mb-0">{{ t.token_number }}</h3>
+            </div>
+            <span class="badge rounded-pill badge-qs-{{ t.status }}" data-status-badge>{{ t.status|upper }}</span>
+          </div>
+
+          <div class="row g-2 mt-3">
+            <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val" data-field="people_ahead">{{ t.people_ahead }}</div><div class="lbl">Ahead</div></div></div>
+            <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val" data-field="estimated_wait_minutes">{{ t.estimated_wait_minutes }} min</div><div class="lbl">Est. Wait</div></div></div>
+            <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val" data-field="crowd_level">{{ t.crowd_level }}</div><div class="lbl">Crowd</div></div></div>
+          </div>
+
+          <div class="qs-notif-banner mt-3" data-near-turn-banner style="display: {{ 'block' if t.notify_near_turn else 'none' }};">
+            <i class="bi bi-bell-fill"></i> Your turn is almost here — please head to the counter!
+          </div>
+
+          <div class="d-flex gap-2 mt-3">
+            <a href="{{ url_for('user.track_token', token_id=t.id) }}" class="btn btn-qs-outline btn-sm flex-fill">Track Live</a>
+            <form method="POST" action="{{ url_for('user.cancel_token', token_id=t.id) }}" class="flex-fill">
+              <button type="submit" class="btn btn-outline-danger btn-sm w-100">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="glass-card p-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-clock-history"></i> Recent Token History</h5>
+        {% if history %}
+        <div class="table-responsive">
+          <table class="table qs-table align-middle mb-0">
+            <thead><tr><th>Token</th><th>Service</th><th>Status</th><th>Booked At</th><th>Wait</th></tr></thead>
+            <tbody>
+              {% for h in history %}
+              <tr>
+                <td class="fw-semibold">{{ h.token_number }}</td>
+                <td>{{ h.service_name }}</td>
+                <td><span class="badge rounded-pill badge-qs-{{ h.status }}">{{ h.status|upper }}</span></td>
+                <td>{{ h.booked_at }}</td>
+                <td>{{ h.actual_wait_minutes if h.actual_wait_minutes else '—' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">No tokens booked yet. <a href="{{ url_for('user.book_token') }}">Book your first token</a>.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3"><i class="bi bi-grid"></i> Available Services</h5>
+        {% for s in services %}
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <span>{{ s.name }}</span>
+          <span class="badge {{ 'bg-danger-subtle text-danger' if s.is_paused else 'bg-success-subtle text-success' }}">
+            {{ 'Paused' if s.is_paused else 'Open' }}
+          </span>
+        </div>
+        {% endfor %}
+        <a href="{{ url_for('user.book_token') }}" class="btn btn-qs-primary w-100 mt-3">Book a Token</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

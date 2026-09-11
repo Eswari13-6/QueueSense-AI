@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}My Profile — QueueSense-AI{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 640px;">
+  <div class="glass-card p-4">
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <div class="qs-feature-icon" style="width:64px;height:64px;font-size:1.8rem;">
+        <i class="bi bi-person-fill"></i>
+      </div>
+      <div>
+        <h4 class="fw-bold mb-0">{{ user.full_name }}</h4>
+        <p class="text-muted mb-0">Member since {{ user.created_at }}</p>
+      </div>
+    </div>
+    <ul class="list-unstyled">
+      <li class="mb-3 pb-3 border-bottom"><strong>Email:</strong> {{ user.email }}</li>
+      <li class="mb-3 pb-3 border-bottom"><strong>Phone:</strong> {{ user.phone }}</li>
+    </ul>
+    <a href="{{ url_for('user.dashboard') }}" class="btn btn-qs-outline"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

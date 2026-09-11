@@ -1,0 +1,103 @@
+/* =========================================================================
+   dashboard.css — user dashboard & tracking page styling
+   ========================================================================= */
+
+.qs-token-hero {
+  background: linear-gradient(135deg, var(--qs-primary) 0%, var(--qs-accent) 100%);
+  border-radius: var(--qs-radius-lg);
+  color: #fff;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.qs-token-hero .qs-token-number {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.qs-token-hero .qs-token-label {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1.2px;
+  opacity: 0.85;
+}
+
+.qs-progress-ring-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qs-mini-stat {
+  padding: 18px;
+  border-radius: var(--qs-radius-md);
+  text-align: center;
+}
+.qs-mini-stat .val { font-size: 1.6rem; font-weight: 800; color: var(--qs-primary); }
+.qs-mini-stat .lbl { font-size: 0.78rem; color: var(--qs-text-muted); text-transform: uppercase; font-weight: 600; }
+
+.qs-qr-box {
+  padding: 20px;
+  border-radius: var(--qs-radius-md);
+  text-align: center;
+}
+.qs-qr-box img {
+  width: 160px; height: 160px;
+  border-radius: var(--qs-radius-sm);
+  border: 1px solid var(--qs-card-border);
+  background: #fff;
+  padding: 8px;
+}
+
+.qs-service-tile {
+  padding: 20px;
+  border-radius: var(--qs-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+.qs-service-tile:hover { border-color: var(--qs-primary-light); }
+.qs-service-tile.selected {
+  border-color: var(--qs-primary);
+  background: rgba(99,102,241,0.1);
+}
+.qs-service-tile .qs-service-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--qs-primary), var(--qs-accent));
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.qs-notif-banner {
+  background: linear-gradient(90deg, #FDE68A, #FCA5A5);
+  color: #7C2D12;
+  border-radius: var(--qs-radius-md);
+  padding: 14px 20px;
+  font-weight: 600;
+  animation: qs-pulse-banner 1.6s ease-in-out infinite;
+}
+@keyframes qs-pulse-banner {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+.qs-timeline {
+  border-left: 3px solid var(--qs-primary-light);
+  padding-left: 20px;
+  margin-left: 8px;
+}
+.qs-timeline .qs-timeline-item {
+  position: relative;
+  padding-bottom: 22px;
+}
+.qs-timeline .qs-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -27px; top: 3px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--qs-primary);
+}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Track Token {{ token.token_number }} — QueueSense-AI{% endblock %}
+{% block extra_css %}<link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 900px;" data-token-id="{{ token.id }}">
+
+  <div class="qs-token-hero mb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <div class="qs-token-label">{{ token.service_name }}</div>
+        <div class="qs-token-number">{{ token.token_number }}</div>
+      </div>
+      <span class="badge rounded-pill fs-6 px-3 py-2 badge-qs-{{ token.status }}" data-status-badge>{{ token.status|upper }}</span>
+    </div>
+  </div>
+
+  <div class="qs-notif-banner mb-4" data-near-turn-banner style="display: {{ 'block' if position.notify_near_turn else 'none' }};">
+    <i class="bi bi-bell-fill"></i> Your turn is almost here — please head to the counter now!
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val" data-field="people_ahead">{{ position.people_ahead }}</div><div class="lbl">People Ahead</div></div></div>
+    <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val" data-field="estimated_wait_minutes">{{ position.estimated_wait_minutes }} min</div><div class="lbl">Est. Waiting Time</div></div></div>
+    <div class="col-4"><div class="qs-mini-stat glass-card"><div class="val" data-field="crowd_level">{{ position.crowd_level }}</div><div class="lbl">Crowd Level</div></div></div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-7">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-3"><i class="bi bi-info-circle"></i> Token Details</h5>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><strong>Booked at:</strong> {{ token.booked_at }}</li>
+          <li class="mb-2"><strong>Priority:</strong> {{ token.priority|upper }}</li>
+          <li class="mb-2"><strong>Predicted wait at booking:</strong> {{ token.predicted_wait_minutes }} min</li>
+          <li class="mb-2"><strong>Queue date:</strong> {{ token.queue_date }}</li>
+        </ul>
+        {% if token.status == 'waiting' %}
+        <form method="POST" action="{{ url_for('user.cancel_token', token_id=token.id) }}">
+          <button type="submit" class="btn btn-outline-danger btn-sm">Cancel this token</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="qs-qr-box glass-card h-100 d-flex flex-column justify-content-center align-items-center">
+        <img src="{{ url_for('static', filename='qrcodes/token_' + token.id|string + '.png') }}" alt="QR Code">
+        <p class="text-muted small mt-2 mb-2">Show this QR code at the counter</p>
+        <a href="{{ url_for('user.download_qr', token_id=token.id) }}" class="btn btn-qs-outline btn-sm"><i class="bi bi-download"></i> Download QR</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
